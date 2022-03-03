@@ -1,0 +1,11 @@
+﻿**************************************
+INSTALACION EDUCOVOTA PORTABLE V.12.4
+**************************************
+
+1. Luego de descomprimir el archivo zip, ingrese a la carpeta y de doble clic al archivo "usbwebserver", para iniciar el servidor Web Apache y la base de datos Mysql.
+2. En caso de salir algún aviso de bloqueo para Apache Web y Mysql, dar clic en desbloquear.
+3. Puede ingresar al sistema desde cualquier navegador web escribiendo la dirección IP de su máquina (Ej: http://192.168.1.1).
+4. Para ingresar al sistema de administración escriba la dirección IP seguido de /administrador (Ej: http://192.168.1.1/administrador). 
+5. Los datos de acceso como administrador son: usuario:admin y clave:admin. Se recomienda cambiar la clave la primera vez que ingrese al sistema.
+
+Web:www.educolibre.co - Email:info@educolibre.co

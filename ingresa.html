@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <?php
+   echo '<title>'.$leer['institucion'].' - EducoVota</title>';
+   ?>
+<link href="estilo3.css" rel="stylesheet" type="text/css" />
+</head>
+<body OnLoad="document.consulta.documento.focus();">
+<?php include_once("java.html"); ?>
+<img src="iconos/EscudoColegio.png" style="display:scroll;position:absolute; top:5px;" width="130" alt="EscudoColegio" /><br />
+<?php
+echo '<h2>'.$leer['institucion'].'<br />';
+echo $leer['descripcion'].'</h2><br />';
+?>
+<table style="float:left; width:60%; margin-left:20px; margin-right:30px;">
+<tr>
+<td>
+
+<table style="margin-left:40px; font-size:12pt;">
+<tr><td></td><td><strong>Para realizar el proceso de votación siga los siguientes tres pasos:</strong></td></tr>
+<tr><td><img src="iconos/n1.png" style="float:left;" width="30px" alt="#1" /></td>
+<td>Ingrese al sistema de votación, escribiendo su número de documento (costado derecho de esta página).</td></tr>
+
+<tr><td><img src="iconos/n2.png" style="float:left;" width="30px" alt="#1" /></td>
+<td>Al ingresar al sistema encontrará el tarjetón electoral para votar por sus representantes preferidos. Seleccione los de su preferencia dando clic sobre la foto.</td></tr>
+
+<tr><td><img src="iconos/n3.png" style="float:left;" width="30px" alt="#1" /></td>
+<td>Para registrar su voto de clic en el botón <strong>votar</strong></td></tr>
+
+</table>
+</td>
+</tr>
+</table>
+
+<form name="consulta" action="index.php" method="post">
+<table border="2">
+<tr><td colspan="2" style="text-align:center;"><strong>Ingreso al sistema</strong></td></tr>
+<tr>
+<td><label for="documento">Documento del estudiante:</label></td>
+<td><input type="text" name="documento" size="20" maxlength="50" title="Escriba el documento del estudiante" /></td>
+</tr>
+
+<?php
+if ($leer['clave']=="S") {
+	echo '<tr>';
+	echo '<td><label for="contra">Contraseña de acceso:</label></td>';
+	echo '<td><input type="password" name="contra" size="20" maxlength="50" title="Escriba la contraseña de acceso" /></td>';
+	echo '</tr>';
+}
+?>
+
+<tr><td colspan="2" class="cen">
+<input type="submit" name="envia_consulta" value="Ingresar" title="Ingresar al sistema" />
+</td></tr>
+</table>
+</form>
+</body>
+</html>

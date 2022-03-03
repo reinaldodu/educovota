@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <?php
+   echo '<title>'.$leer['institucion'].' - EducoVota</title>';
+   ?>
+      <link href="../estilo4.css" rel="stylesheet" type="text/css" />
+</head>
+<body OnLoad="document.administracion.usuario.focus();">
+<img src="../iconos/EscudoColegio.png" style="display:scroll;position:fixed; top:5px;" width="130" alt="LogoColegio" /><br />
+<div align="center">
+   <?php
+   echo '<h2>'.$leer['institucion'].' - ADMINISTRACIÓN EDUCOVOTA</h2><br /><br />';
+   ?>
+
+<form name="administracion" action="index.php" method="post">
+<table border="2">
+<tr>
+<td style="text-align:right;"><strong><label for="usuario">Nombre de usuario:</label></strong></td>
+<td><input type="text" name="usuario" size="20" maxlength="50" title="Escriba el nombre de usuario" /></td>
+</tr>
+<tr>
+<td style="text-align:right;"><strong><label for="clave">Contraseña:</label></strong></td>
+<td><input type="password" name="clave" size="20" maxlength="30"  title="Escriba la contraseña de acceso." /></td>
+</tr>
+<tr><td colspan="2" class="cen">
+<input type="submit" name="envia_acceso" value="Ingresar" title="Ingresar al sistema" /></td></tr>
+</table>
+</form>
+</div>
+</body>
+</html>

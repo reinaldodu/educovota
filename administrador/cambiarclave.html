@@ -1,0 +1,43 @@
+<?php
+//****** Verificamos si existe la cookie *****/
+if(isset($_COOKIE['VotaDatAdmin'])) {
+if(isset($_GET['id'])) {
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>Cambiar contraseña</title>
+      <link href="../estilo.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<form name="cambioclave" action="cambiarclave.php" method="post">
+
+<h2>CAMBIAR CONTRASEÑA</h2>
+<table cellpadding="0" cellspacing="5" border="0">
+<tr>
+<td><label for="clave_actual">Clave actual:</label></td>
+<td><input type="password" name="clave_actual" size="20" maxlength="30" title="Escriba la clave actual." /></td>
+</tr>
+
+<tr>
+<td><label for="clave1_nueva">Clave nueva:</label><br />(mínimo 4 caracteres)</td>
+<td><input type="password" name="clave1_nueva" size="20" maxlength="30" title="Escriba la nueva clave" /></td>
+</tr>
+
+<tr>
+<td><label for="clave2_nueva">Confirmar clave nueva:</label></td>
+<td><input type="password" name="clave2_nueva" size="20" maxlength="30" title="Escriba la confirmacion de la nueva clave" /></td>
+</tr>
+
+</table><br />
+<input type="hidden" name="identificador" value="<?php echo ($_GET['id']); ?>" />
+<div class="cen">
+<input type="submit" name="envia_cambioclave" value="Guardar datos" title="Guardar los datos" />
+</div></form>
+
+</body>
+</html>
+<?php
+}
+}
+?>
