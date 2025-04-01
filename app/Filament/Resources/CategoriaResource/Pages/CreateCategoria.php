@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\EstudianteResource\Pages;
+namespace App\Filament\Resources\CategoriaResource\Pages;
 
-use App\Filament\Resources\EstudianteResource;
+use App\Filament\Resources\CategoriaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateEstudiante extends CreateRecord
+class CreateCategoria extends CreateRecord
 {
-    protected static string $resource = EstudianteResource::class;
+    protected static string $resource = CategoriaResource::class;
 
     //Redirigir a la vista de lista
     protected function getRedirectUrl(): string

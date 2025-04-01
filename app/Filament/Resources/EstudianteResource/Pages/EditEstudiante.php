@@ -10,7 +10,7 @@ class EditEstudiante extends EditRecord
 {
     protected static string $resource = EstudianteResource::class;
 
-    //Redirigir a listar estudiantes después de editar
+    //Redirigir a la vista de lista
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

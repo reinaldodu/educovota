@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\GradoResource\Pages;
-use App\Filament\Resources\GradoResource\RelationManagers;
-use App\Models\Grado;
+use App\Filament\Resources\CategoriaResource\Pages;
+use App\Filament\Resources\CategoriaResource\RelationManagers;
+use App\Models\Categoria;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,11 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class GradoResource extends Resource
+class CategoriaResource extends Resource
 {
-    protected static ?string $model = Grado::class;
+    protected static ?string $model = Categoria::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-bookmark';
 
     public static function form(Form $form): Form
     {
@@ -72,9 +72,9 @@ class GradoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGrados::route('/'),
-            'create' => Pages\CreateGrado::route('/create'),
-            'edit' => Pages\EditGrado::route('/{record}/edit'),
+            'index' => Pages\ListCategorias::route('/'),
+            'create' => Pages\CreateCategoria::route('/create'),
+            'edit' => Pages\EditCategoria::route('/{record}/edit'),
         ];
     }
 }

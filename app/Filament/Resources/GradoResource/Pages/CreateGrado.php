@@ -10,9 +10,10 @@ class CreateGrado extends CreateRecord
 {
     protected static string $resource = GradoResource::class;
 
-    //Despues de crear el grado, redirigir a la página de grados
+    //Redirigir a la vista de lista
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
     }
+    
 }

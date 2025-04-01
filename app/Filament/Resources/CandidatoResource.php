@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\EstudianteResource\Pages;
-use App\Filament\Resources\EstudianteResource\RelationManagers;
-use App\Models\Estudiante;
+use App\Filament\Resources\CandidatoResource\Pages;
+use App\Filament\Resources\CandidatoResource\RelationManagers;
+use App\Models\Candidato;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,37 +13,37 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EstudianteResource extends Resource
+class CandidatoResource extends Resource
 {
-    protected static ?string $model = Estudiante::class;
+    protected static ?string $model = Candidato::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                //agregar imagen
+                Forms\Components\FileUpload::make('foto')
+                    ->label('Foto')
+                    ->image()
+                    ->avatar()
+                    ->maxSize(4096)
+                    ->imageEditor()
+                    ->disk('public')
+                    ->directory('candidatos')
+                    ->required(),
+                Forms\Components\Select::make('categoria_id')
+                    ->relationship('categoria', 'nombre')
+                    ->searchable()
+                    ->required()
+                    ->preload(),
                 Forms\Components\TextInput::make('nombres')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('apellidos')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('documento')
-                    ->required()
-                    ->unique(ignoreRecord: true)
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->maxLength(255)
-                    //encriptar el password
-                    ->dehydrated(fn ($state) => !empty($state)) // solo envia si el campo no está vacío
-                    ->dehydrateStateUsing(fn ($state) => bcrypt($state)),
-                Forms\Components\Select::make('grado_id')
-                    ->relationship('grado', 'nombre', fn ($query) => $query->orderBy('id'))
-                    ->required()
-                    ->preload()
-                    ->searchable(),
+                    ->maxLength(255),                
             ]);
     }
 
@@ -55,11 +55,14 @@ class EstudianteResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('apellidos')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('documento')
-                    ->searchable(),
-                // Mostrar el nombre del grado en lugar del ID
-                Tables\Columns\TextColumn::make('grado.nombre')
-                    ->label('Grado')
+                //mostrar imagen como avatar
+                Tables\Columns\ImageColumn::make('foto')
+                    ->label('Foto')
+                    ->disk('public')
+                    ->size(50)
+                    ->circular(),
+                Tables\Columns\TextColumn::make('categoria.nombre')
+                    ->label('Categoria')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -94,9 +97,9 @@ class EstudianteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEstudiantes::route('/'),
-            'create' => Pages\CreateEstudiante::route('/create'),
-            'edit' => Pages\EditEstudiante::route('/{record}/edit'),
+            'index' => Pages\ListCandidatos::route('/'),
+            'create' => Pages\CreateCandidato::route('/create'),
+            'edit' => Pages\EditCandidato::route('/{record}/edit'),
         ];
     }
 }

@@ -10,6 +10,12 @@ class EditGrado extends EditRecord
 {
     protected static string $resource = GradoResource::class;
 
+    //Redirigir a la vista de lista
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+   
     protected function getHeaderActions(): array
     {
         return [
