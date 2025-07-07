@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
+use App\Models\Voto;
 
 class LoginEstudiante extends BaseLogin
 {
@@ -27,6 +28,7 @@ class LoginEstudiante extends BaseLogin
                 ->label('Documento')
                 ->required()
                 ->autocomplete('off')
+                ->autofocus()
                 ->hint(fn () => session('error') ? '✖ ' . session('error') : '')
                 ->hintColor('danger'),
 
@@ -44,21 +46,32 @@ class LoginEstudiante extends BaseLogin
     {
         $formState = $this->form->getState();
         $requiresPassword = env('PASSWORD_VOTACION', false); 
-    
+
         if ($requiresPassword) {
             if (!Auth::guard('students')->attempt($formState)) {
                 return $this->sendAuthError();
             }
         } else {
             $user = Auth::guard('students')->getProvider()->retrieveByCredentials($formState);
-            
+
             if (!$user) {
                 return $this->sendAuthError();
             }
-    
+
             Auth::guard('students')->login($user);
         }
-    
+
+        // Verificar si el estudiante ya votó
+        $estudianteId = Auth::guard('students')->id();
+
+        if (Voto::where('estudiante_id', $estudianteId)->exists()) {
+            Auth::guard('students')->logout();
+
+            session()->flash('error', 'Ya registraste tu voto.');
+
+            return null; // cancela el login y vuelve a la misma vista
+        }
+
         return app(LoginResponse::class);
     }
     

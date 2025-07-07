@@ -3,15 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EstudianteResource\Pages;
-use App\Filament\Resources\EstudianteResource\RelationManagers;
 use App\Models\Estudiante;
+use App\Actions\ImportarEstudiantes;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\Action;
+use Filament\Forms\Components\FileUpload;
+use Illuminate\Support\Facades\Storage;
+use Filament\Notifications\Notification;
 
 class EstudianteResource extends Resource
 {
@@ -36,8 +38,7 @@ class EstudianteResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->maxLength(255)
-                    //encriptar el password
-                    ->dehydrated(fn ($state) => !empty($state)) // solo envia si el campo no está vacío
+                    ->dehydrated(fn ($state) => !empty($state))
                     ->dehydrateStateUsing(fn ($state) => bcrypt($state)),
                 Forms\Components\Select::make('grado_id')
                     ->relationship('grado', 'nombre', fn ($query) => $query->orderBy('id'))
@@ -51,13 +52,9 @@ class EstudianteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nombres')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('apellidos')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('documento')
-                    ->searchable(),
-                // Mostrar el nombre del grado en lugar del ID
+                Tables\Columns\TextColumn::make('nombres')->searchable(),
+                Tables\Columns\TextColumn::make('apellidos')->searchable(),
+                Tables\Columns\TextColumn::make('documento')->searchable(),
                 Tables\Columns\TextColumn::make('grado.nombre')
                     ->label('Grado')
                     ->sortable()
@@ -71,9 +68,7 @@ class EstudianteResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -81,14 +76,57 @@ class EstudianteResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                Action::make('importar-estudiantes')
+                    ->label('Importar CSV')
+                    ->color('gray')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->form([
+                        FileUpload::make('archivo')
+                            ->label('Subir archivo CSV')
+                            ->disk('local')
+                            ->directory('importaciones')
+                            ->acceptedFileTypes([
+                                'text/csv',
+                                'application/csv',
+                            ])
+                            ->rules(['mimes:csv']) // Validar tipos de archivo en el servidor
+                            ->required(),
+                    ])
+                    ->modalWidth('md')
+                    ->modalHeading('Importar estudiantes desde archivo')
+                    ->action(function (array $data) {
+                        $disk = 'local';
+                        $ruta = Storage::disk($disk)->path($data['archivo']);
+                        $importador = new ImportarEstudiantes();
+                        $resultado = $importador->ejecutar($ruta);
+
+                        if ($resultado['errores']->isNotEmpty()) {
+                            $primerError = $resultado['errores']->first();
+                            $mensaje = "Fila {$primerError['fila']}: {$primerError['errores']}";
+
+                            Notification::make()
+                                ->title('Error en la importación')
+                                ->body($mensaje)
+                                ->danger()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Importación exitosa')
+                                ->success()
+                                ->body("Se importaron {$resultado['importados']} registros correctamente.")
+                                ->send();
+                        }
+                        // Eliminar el archivo después de la importación
+                        Storage::disk($disk)->delete($data['archivo']);
+                    })
             ]);
     }
 
-    public static function getRelations(): array
+    public static function getRelations(): array 
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

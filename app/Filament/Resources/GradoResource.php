@@ -36,7 +36,10 @@ class GradoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nombre')                    
+                //mostrar el id del grado
+                Tables\Columns\TextColumn::make('id')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('descripcion')
                     ->searchable(),
