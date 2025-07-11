@@ -12,10 +12,16 @@ class Candidato extends Model
     /** @use HasFactory<\Database\Factories\CandidatoFactory> */
     use HasFactory;
 
-    //Relación un estudiante pertenece a una categoria
+    //Relación un canditato pertenece a una categoria
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
+    }
+
+    //Relación un candidato tiene muchos votos
+    public function votos()
+    {
+        return $this->hasMany(Voto::class);
     }
 
     //Eliminar la foto del candidato al eliminar el registro

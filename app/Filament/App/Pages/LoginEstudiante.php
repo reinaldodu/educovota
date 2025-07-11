@@ -2,27 +2,53 @@
 
 namespace App\Filament\App\Pages;
 
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-
-use Filament\Pages\Auth\Login as BaseLogin;
-use Illuminate\Support\Facades\Auth;
-
-use Filament\Forms\Form;
-use Filament\Forms\Components\TextInput;
+use App\Models\Configuracion;
 use App\Models\Voto;
+use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Filament\Pages\Auth\Login as BaseLogin;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Illuminate\Support\Facades\Auth;
 
 class LoginEstudiante extends BaseLogin
 {
+    public ?Configuracion $config = null;
+    public bool $mostrarFormulario = true;
 
-    // Método para establecer el encabezado de la página
-    public function getHeading(): string
+    public function mount(): void
     {
-        return 'Sistema de votación';
+        $this->config = Configuracion::getInstance();
+
+        if (! $this->config->votacion_activa) {
+            $this->mostrarFormulario = false;
+        }
     }
 
-    // Método para crear el formulario de inicio de sesión de estudiantes
+    public function getHeading(): string
+    {
+        return $this->config->nombre_institucion ?? 'Sistema de votación';
+    }
+
+    public function getSubheading(): ?string
+    {
+        return $this->mostrarFormulario
+            ? null
+            : '⚠️ El sistema no está disponible para votar en este momento.';
+    }
+
+    public function getFormActions(): array
+    {
+        return $this->mostrarFormulario
+            ? parent::getFormActions()
+            : [];
+    }
+
     public function form(Form $form): Form
     {
+        if (! $this->mostrarFormulario) {
+            return $form->schema([]);
+        }
+
         return $form->schema([
             TextInput::make('documento')
                 ->label('Documento')
@@ -36,16 +62,15 @@ class LoginEstudiante extends BaseLogin
                 ->label('Contraseña')
                 ->password()
                 ->autocomplete('off')
-                ->hidden(fn () => !env('PASSWORD_VOTACION', false))
-                ->required(fn () => env('PASSWORD_VOTACION', false)),
+                ->hidden(fn () => ! $this->config->requerir_password)
+                ->required(fn () => $this->config->requerir_password),
         ]);
     }
 
-    // Método para manejar la autenticación del estudiante
     public function authenticate(): ?LoginResponse
     {
         $formState = $this->form->getState();
-        $requiresPassword = env('PASSWORD_VOTACION', false); 
+        $requiresPassword = $this->config->requerir_password;
 
         if ($requiresPassword) {
             if (!Auth::guard('students')->attempt($formState)) {
@@ -61,21 +86,16 @@ class LoginEstudiante extends BaseLogin
             Auth::guard('students')->login($user);
         }
 
-        // Verificar si el estudiante ya votó
-        $estudianteId = Auth::guard('students')->id();
-
-        if (Voto::where('estudiante_id', $estudianteId)->exists()) {
+        // Validar si ya votó
+        if (Voto::where('estudiante_id', Auth::guard('students')->id())->exists()) {
             Auth::guard('students')->logout();
-
             session()->flash('error', 'Ya registraste tu voto.');
-
-            return null; // cancela el login y vuelve a la misma vista
+            return null;
         }
 
         return app(LoginResponse::class);
     }
-    
-    // Método auxiliar para manejar el error de autenticación
+
     protected function sendAuthError()
     {
         session()->flash('error', 'Credenciales incorrectas.');

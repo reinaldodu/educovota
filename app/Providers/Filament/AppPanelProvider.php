@@ -27,7 +27,7 @@ class AppPanelProvider extends PanelProvider
             ->darkMode(false)
             ->navigation(false)
             ->id('app')
-            ->path('votacion')
+            ->path('/')
             ->login(LoginEstudiante::class)
             ->authGuard('students')
             ->colors([

@@ -72,6 +72,6 @@ class Votar extends Page
             ->body('Gracias por participar en la elección.')
             ->send();
 
-        return redirect('/votacion');
+        return redirect('/');
     }
 }

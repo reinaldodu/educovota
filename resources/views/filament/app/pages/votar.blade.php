@@ -26,7 +26,7 @@
                     </div>
 
                     {{-- Fondo translúcido y check al estar seleccionado --}}
-                    <div class="absolute inset-0 bg-green-900/30 z-10 flex items-center justify-center rounded-xl opacity-0 peer-checked:opacity-100 transition">
+                    <div class="absolute inset-0 bg-gray-900/40 z-10 flex items-center justify-center rounded-xl opacity-0 peer-checked:opacity-100 transition">
                         <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4" />
@@ -34,7 +34,7 @@
                     </div>
 
                     {{-- Tarjeta visual del candidato --}}
-                    <div class="w-full bg-white rounded-xl p-4 text-center flex flex-col items-center justify-between shadow transition group-hover:shadow-lg min-h-[260px] border-2 peer-checked:border-green-600">
+                    <div class="w-full bg-white rounded-xl p-4 text-center flex flex-col items-center justify-between shadow transition group-hover:shadow-lg min-h-[260px] border-2 peer-checked:border-green-600 group-hover:border-green-600">
                         @if ($candidato['foto'])
                             <img src="{{ asset('storage/' . $candidato['foto']) }}" alt="Foto"
                                  class="w-32 h-32 rounded-full object-cover mb-4 shadow">
