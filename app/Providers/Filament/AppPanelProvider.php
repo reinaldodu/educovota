@@ -18,11 +18,14 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use APP\Filament\App\Pages\LoginEstudiante;
 use App\Filament\App\Pages\Votar;
+use App\Models\Configuracion;
 
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $config = Configuracion::first();
+        
         return $panel
             ->darkMode(false)
             ->navigation(false)
@@ -33,6 +36,13 @@ class AppPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->topbar(false)
+            ->brandLogo(
+                $config && $config->logo && file_exists(storage_path('app/public/' . $config->logo))
+                    ? asset('storage/' . $config->logo)
+                    : asset('storage/logos/logo.png')
+            )
+            ->brandLogoHeight('4rem')
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([

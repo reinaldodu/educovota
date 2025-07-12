@@ -46,4 +46,10 @@ class RankingCandidatos extends BaseWidget
                 ->color('success'),
         ];
     }
+
+    // Refrescar la tabla cada 10 segundos
+    protected function getTablePollingInterval(): ?string
+    {
+        return '10s';
+    }
 }

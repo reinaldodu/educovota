@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('configuraciones', function (Blueprint $table) {
             $table->id();
             $table->string('nombre_institucion');
+            $table->string('descripcion_votaciones')->nullable();
             $table->string('logo')->nullable();
             $table->boolean('votacion_activa')->default(false);
             $table->boolean('requerir_password')->default(false);

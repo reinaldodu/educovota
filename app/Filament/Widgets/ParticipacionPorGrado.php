@@ -16,6 +16,21 @@ class ParticipacionPorGrado extends ChartWidget
     {
         $estudiantesQueVotaron = Voto::pluck('estudiante_id')->unique();
 
+        if ($estudiantesQueVotaron->isEmpty()) {
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Votantes por grado',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => 'rgb(34, 197, 94)',
+                        'borderWidth' => 1,
+                    ],
+                ],
+                'labels' => [],
+            ];
+        }
+
         $estudiantes = Estudiante::with('grado')
             ->whereIn('id', $estudiantesQueVotaron)
             ->get();

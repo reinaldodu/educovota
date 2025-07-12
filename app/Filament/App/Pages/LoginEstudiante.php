@@ -4,6 +4,7 @@ namespace App\Filament\App\Pages;
 
 use App\Models\Configuracion;
 use App\Models\Voto;
+use App\Models\Candidato;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Pages\Auth\Login as BaseLogin;
 use Filament\Forms\Components\TextInput;
@@ -14,6 +15,7 @@ class LoginEstudiante extends BaseLogin
 {
     public ?Configuracion $config = null;
     public bool $mostrarFormulario = true;
+    public string $motivoBloqueo = '';
 
     public function mount(): void
     {
@@ -21,6 +23,14 @@ class LoginEstudiante extends BaseLogin
 
         if (! $this->config->votacion_activa) {
             $this->mostrarFormulario = false;
+            $this->motivoBloqueo = '⚠️ El sistema no está disponible para votar en este momento.';
+            return;
+        }
+
+        if (Candidato::count() === 0) {
+            $this->mostrarFormulario = false;
+            $this->motivoBloqueo = '⚠️ No existen candidatos registrados para votar.';
+            return;
         }
     }
 
@@ -31,16 +41,12 @@ class LoginEstudiante extends BaseLogin
 
     public function getSubheading(): ?string
     {
-        return $this->mostrarFormulario
-            ? null
-            : '⚠️ El sistema no está disponible para votar en este momento.';
+        return $this->mostrarFormulario ? 'Bienvenido a Educovota' : $this->motivoBloqueo;
     }
 
     public function getFormActions(): array
     {
-        return $this->mostrarFormulario
-            ? parent::getFormActions()
-            : [];
+        return $this->mostrarFormulario ? parent::getFormActions() : [];
     }
 
     public function form(Form $form): Form
@@ -52,6 +58,7 @@ class LoginEstudiante extends BaseLogin
         return $form->schema([
             TextInput::make('documento')
                 ->label('Documento')
+                ->placeholder('Ingresa tu número de documento')
                 ->required()
                 ->autocomplete('off')
                 ->autofocus()

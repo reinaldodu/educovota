@@ -28,10 +28,11 @@ class ConfiguracionSistema extends Page implements HasForms
         $config = Configuracion::getInstance();
 
         $this->data = [
-            'nombre_institucion'   => $config->nombre_institucion,
-            'logo'                 => $config->logo,
-            'votacion_activa'      => $config->votacion_activa,
-            'requerir_password'    => $config->requerir_password,
+            'nombre_institucion'      => $config->nombre_institucion,
+            'descripcion_votaciones'  => $config->descripcion_votaciones,
+            'logo'                    => $config->logo,
+            'votacion_activa'         => $config->votacion_activa,
+            'requerir_password'       => $config->requerir_password,
         ];
 
         $this->form->fill($this->data);
@@ -41,9 +42,9 @@ class ConfiguracionSistema extends Page implements HasForms
     {
         return $form
             ->schema([
-                // Fila 1: Logo + nombre
+                // Fila 1: Logo + campos al frente
                 Forms\Components\Grid::make()
-                    ->columns(2)
+                    ->columns(3)
                     ->schema([
                         Forms\Components\FileUpload::make('logo')
                             ->label('Logo de la institución')
@@ -52,15 +53,25 @@ class ConfiguracionSistema extends Page implements HasForms
                             ->avatar()
                             ->imageEditor()
                             ->imagePreviewHeight('150')
+                            ->columnSpan(1)
                             ->required(),
 
-                        Forms\Components\TextInput::make('nombre_institucion')
-                            ->label('Nombre de la institución')
-                            ->required()
-                            ->maxLength(255),
+                        Forms\Components\Grid::make()
+                            ->columns(1)
+                            ->columnSpan(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('nombre_institucion')
+                                    ->label('Nombre de la institución')
+                                    ->required()
+                                    ->maxLength(100),
+
+                                Forms\Components\TextInput::make('descripcion_votaciones')
+                                    ->label('Descripción de las votaciones')
+                                    ->maxLength(100)
+                                    ->nullable(),
+                            ]),
                     ]),
 
-                // Fila 2: Selectores uno debajo del otro
                 Forms\Components\Toggle::make('votacion_activa')
                     ->label('¿Sistema de votación activo?')
                     ->onColor('success')

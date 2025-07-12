@@ -13,6 +13,7 @@ class Configuracion extends Model
 
     protected $fillable = [
         'nombre_institucion',
+        'descripcion_votaciones',
         'logo',
         'votacion_activa',
         'requerir_password',
