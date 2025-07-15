@@ -3,6 +3,7 @@
 namespace App\Filament\App\Pages;
 
 use App\Models\Candidato;
+use App\Models\Categoria;
 use App\Models\Voto;
 use App\Models\Configuracion;
 use Filament\Pages\Page;
@@ -13,43 +14,45 @@ class Votar extends Page
 {
     protected static string $view = 'filament.app.pages.votar';
 
-    public $candidatos;
-    public $candidato_id;
-    public $logo;
-    public $nombre_institucion;
-    public $descripcion_votaciones;
+    public $candidatos = []; // [nombre_categoria => [candidatos]]
+    public $selecciones = []; // [categoria_id => candidato_id o 'blanco_{id}']
+    public $config;
     public $user;
 
     public function mount(): void
     {
-        // Obtener lista de candidatos con su categoría
-        $this->candidatos = Candidato::with('categoria')->get()->toArray();
-
-        // Agregar opción de voto en blanco
-        $this->candidatos[] = [
-            'id' => 'blanco',
-            'nombres' => 'Voto en blanco',
-            'apellidos' => '',
-            'foto' => null,
-            'categoria' => ['nombre' => null],
-        ];
-
-        // Cargar logo y nombre_institucion desde la configuración
-        $config = Configuracion::first();
-
-        $this->logo = $config && $config->logo
-            ? asset('storage/' . $config->logo)
-            : asset('images/default-logo.png');
-
-        $this->nombre_institucion = $config->nombre_institucion ?? 'Educovota';
-        $this->descripcion_votaciones = $config->descripcion_votaciones ?? '';
         $this->user = Auth::guard('students')->user();
+        $this->config = Configuracion::first();
+
+        // Obtener todas las categorías con sus candidatos sin ordenar
+        $categorias = Categoria::with(['candidatos'])->get();
+
+        // Agrupar candidatos por nombre de la categoría
+        foreach ($categorias as $categoria) {
+            $candidatos = $categoria->candidatos->map(function ($candidato) {
+                return $candidato->toArray();
+            })->all();
+
+            // Agregar manualmente opción de voto en blanco
+            $candidatos[] = [
+                'id' => 'blanco_' . $categoria->id,
+                'nombres' => 'Voto en blanco',
+                'apellidos' => '',
+                'foto' => null,
+                'categoria_id' => $categoria->id,
+                'categoria' => ['nombre' => $categoria->nombre],
+            ];
+
+            $this->candidatos[$categoria->nombre] = $candidatos;
+        }
     }
 
     public function votar()
     {
-        // Verificar si el estudiante ya votó
-        if (Voto::where('estudiante_id', auth()->id())->exists()) {
+        $estudianteId = auth()->id();
+
+        // Verificar si ya votó
+        if (Voto::where('estudiante_id', $estudianteId)->exists()) {
             Notification::make()
                 ->title('Ya has votado')
                 ->danger()
@@ -58,21 +61,16 @@ class Votar extends Page
             return;
         }
 
-        // Verificar si se seleccionó un candidato
-        // if (empty($this->candidato_id)) {
-        //     Notification::make()
-        //         ->title('Votación incompleta')
-        //         ->warning()
-        //         ->body("Por favor seleccione un candidato para registrar su voto.")
-        //         ->send();
-        //     return;
-        // }
+        // Guardar los votos por categoría
+        foreach ($this->selecciones as $categoriaId => $valor) {
+            $candidatoId = str_starts_with($valor, 'blanco_') ? null : $valor;
 
-        // Registrar el voto
-        Voto::create([
-            'estudiante_id' => auth()->id(),
-            'candidato_id' => $this->candidato_id !== 'blanco' ? $this->candidato_id : null,
-        ]);
+            Voto::create([
+                'estudiante_id' => $estudianteId,
+                'categoria_id' => $categoriaId,
+                'candidato_id' => $candidatoId,
+            ]);
+        }
 
         // Cerrar sesión del estudiante
         Auth::guard('students')->logout();
@@ -81,7 +79,7 @@ class Votar extends Page
 
         // Notificar éxito
         Notification::make()
-            ->title('¡Voto registrado con éxito!')
+            ->title('¡Votación registrada con éxito!')
             ->info()
             ->icon('heroicon-o-face-smile')
             ->body('Gracias por participar en la elección.')

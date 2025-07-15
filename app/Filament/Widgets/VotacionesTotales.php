@@ -13,15 +13,22 @@ class VotacionesTotales extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $totalVotos = Voto::count();
+        // Estudiantes que ya votaron (únicos)
+        $estudiantesQueVotaron = Voto::distinct('estudiante_id')->count('estudiante_id');
+
+        // Total estudiantes
         $totalEstudiantes = Estudiante::count();
-        $faltantes = $totalEstudiantes - $totalVotos;
+
+        // Faltantes
+        $faltantes = $totalEstudiantes - $estudiantesQueVotaron;
+
+        // Porcentaje de participación
         $porcentaje = $totalEstudiantes > 0
-            ? round(($totalVotos / $totalEstudiantes) * 100, 2)
+            ? round(($estudiantesQueVotaron / $totalEstudiantes) * 100, 2)
             : 0;
 
         return [
-            Stat::make('Votos registrados', $totalVotos)
+            Stat::make('Registrados', $estudiantesQueVotaron)
                 ->description('Estudiantes que ya votaron')
                 ->color('success'),
 

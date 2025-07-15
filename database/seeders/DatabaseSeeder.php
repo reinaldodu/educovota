@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
         // Ejecutar el seeder de configuración
         $this->call(ConfiguracionSeeder::class);
 
-        // User::factory()->create([
-        //     'name' => 'administrador',
-        //     'email' => 'admin@email.co',
-        //     'password' => bcrypt('admin'),
-        // ]);
+        User::factory()->create([
+            'name' => 'Administrador del Sistema',
+            'email' => 'admin@email.co',
+            'password' => bcrypt('admin'),
+        ]);
     }
 }

@@ -5,16 +5,26 @@ namespace App\Filament\Widgets;
 use App\Models\Estudiante;
 use App\Models\Voto;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class ParticipacionPorGrado extends ChartWidget
 {
-    protected static ?string $heading = 'Participación por grado';
+    use InteractsWithPageFilters;
 
+    protected static ?string $heading = 'Participación por grado';
     protected int | string | array $columnSpan = 6;
 
     protected function getData(): array
     {
-        $estudiantesQueVotaron = Voto::pluck('estudiante_id')->unique();
+        $categoriaId = $this->filters['categoriaId'] ?? null;
+
+        $query = Voto::query();
+
+        if ($categoriaId) {
+            $query->where('categoria_id', $categoriaId);
+        }
+
+        $estudiantesQueVotaron = $query->pluck('estudiante_id')->unique();
 
         if ($estudiantesQueVotaron->isEmpty()) {
             return [
@@ -40,12 +50,11 @@ class ParticipacionPorGrado extends ChartWidget
         $labels = $agrupado->keys()->toArray();
         $data = $agrupado->map->count()->values()->toArray();
 
-        $max = max($data);
+        $max = count($data) > 0 ? max($data) : 1;
 
-        // 🎨 Generar color dinámico (más oscuro si el valor es más alto)
         $backgroundColors = array_map(function ($valor) use ($max) {
-            $opacidad = round(($valor / $max) * 0.8, 2); // Máximo 0.8
-            return "rgba(59, 130, 246, {$opacidad})"; // azul con opacidad dinámica
+            $opacidad = round(($valor / $max) * 0.8, 2);
+            return "rgba(59, 130, 246, {$opacidad})";
         }, $data);
 
         return [

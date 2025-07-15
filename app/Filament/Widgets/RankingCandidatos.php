@@ -5,17 +5,37 @@ namespace App\Filament\Widgets;
 use App\Models\Candidato;
 use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Database\Eloquent\Builder;
 
 class RankingCandidatos extends BaseWidget
 {
-    protected static ?string $heading = '🏆 Ranking de candidatos por votos';
+    use InteractsWithPageFilters;
 
+    protected static ?string $heading = '🏆 Ranking de candidatos por votos';
     protected int | string | array $columnSpan = 6;
 
     protected function getTableQuery(): Builder
     {
-        return Candidato::withCount('votos')->orderByDesc('votos_count');
+        $categoriaId = $this->filters['categoriaId'] ?? null;
+
+        return Candidato::with(['categoria'])
+            ->withCount([
+                'votos' => function ($query) use ($categoriaId) {
+                    if ($categoriaId) {
+                        $query->where('categoria_id', $categoriaId);
+                    }
+                },
+            ])
+            ->when($categoriaId, function ($query) use ($categoriaId) {
+                // Si hay filtro, solo mostrar esa categoría y ordenar por votos
+                return $query->where('categoria_id', $categoriaId)
+                             ->orderByDesc('votos_count');
+            }, function ($query) {
+                // Si no hay filtro, ordenar por el orden natural de categoría_id y luego por votos
+                return $query->orderBy('categoria_id')
+                             ->orderByDesc('votos_count');
+            });
     }
 
     protected function getTableColumns(): array
@@ -28,12 +48,9 @@ class RankingCandidatos extends BaseWidget
                 ->width(40)
                 ->disk('public'),
 
-            // ✅ Columna combinada: Nombre completo
             Tables\Columns\TextColumn::make('nombre_completo')
                 ->label('Candidato')
-                ->getStateUsing(function ($record) {
-                    return $record->nombres . ' ' . $record->apellidos;
-                }),
+                ->getStateUsing(fn ($record) => $record->nombres . ' ' . $record->apellidos),
 
             Tables\Columns\TextColumn::make('categoria.nombre')
                 ->label('Categoría')
@@ -47,7 +64,6 @@ class RankingCandidatos extends BaseWidget
         ];
     }
 
-    // Refrescar la tabla cada 10 segundos
     protected function getTablePollingInterval(): ?string
     {
         return '10s';

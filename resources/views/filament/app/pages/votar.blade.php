@@ -13,16 +13,27 @@
     {{-- Encabezado institucional --}}
     <div class="flex flex-col sm:flex-row items-center justify-center mb-10 gap-6">
         <div class="shrink-0">
-            <img src="{{ $logo }}" alt="Logo Institucional"
-                class="h-24 w-24 rounded-full object-cover shadow-md">
+            @php
+                $rutaLogo = $config->logo ?? null;
+                $logoExiste = $rutaLogo && file_exists(storage_path('app/public/' . $rutaLogo));
+            @endphp
+
+            @if (!empty($config) && $logoExiste)
+                <img src="{{ asset('storage/' . $rutaLogo) }}" alt="Logo Institucional"
+                    class="h-24 w-24 rounded-full object-cover shadow-md">
+            @else
+                @include('filament.logo-default')
+            @endif
         </div>
 
         <div class="text-center sm:text-left flex flex-col items-center sm:items-start justify-center">
-            <h1 class="text-2xl font-bold text-gray-800">{{ $nombre_institucion }}</h1>
+            <h1 class="text-xl font-bold text-gray-800">
+                {{ $config->nombre_institucion ?? 'Nombre de la Institución' }}
+            </h1>
 
-            @if (!empty($descripcion_votaciones))
+            @if (!empty($config?->descripcion_votaciones))
                 <p class="text-lg text-green-600 font-semibold leading-tight mt-1 text-center sm:text-left">
-                    {{ $descripcion_votaciones }}
+                    {{ $config->descripcion_votaciones }}
                 </p>
             @endif
         </div>
@@ -31,56 +42,83 @@
     {{-- Formulario --}}
     <form 
         wire:submit.prevent="votar"
-        x-data="{ seleccionado: @entangle('candidato_id'), enviando: false }"
+        x-data="{
+            enviando: false,
+            selecciones: @entangle('selecciones'),
+            totalCategorias: {{ count($candidatos) }},
+            get completas() {
+                return Object.values(this.selecciones).filter(val => val !== null && val !== '').length === this.totalCategorias;
+            }
+        }"
         @submit="enviando = true"
     >
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
-            @foreach ($candidatos as $candidato)
-                @php $id = $candidato['id'] ?? 'blanco'; @endphp
+        {{-- Recorremos las categorías --}}
+        @foreach ($candidatos as $categoria => $lista)
+            <div class="mb-10">
+                <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-1">{{ $categoria }}</h2>
 
-                <label class="relative block cursor-pointer group">
-                    <input 
-                        type="radio" 
-                        name="candidato_id" 
-                        value="{{ $id }}" 
-                        wire:model="candidato_id"
-                        class="sr-only peer"
-                    >
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+                    @foreach ($lista as $candidato)
+                        @php 
+                            $id = $candidato['id'] ?? 'blanco_' . $candidato['categoria_id']; 
+                        @endphp
 
-                    <div class="absolute inset-0 z-20 opacity-0 scale-90 peer-checked:opacity-100 peer-checked:scale-100 transition-all duration-300 ease-out pointer-events-none overflow-hidden rounded-xl">
-                        <div class="absolute inset-0 bg-gray-700/40 rounded-xl"></div>
-                        <div class="absolute top-1/2 left-[10%] w-[80%] h-1 bg-white transform -rotate-45 origin-center transition-transform duration-300 ease-out"></div>
-                        <div class="absolute top-1/2 left-[10%] w-[80%] h-1 bg-white transform rotate-45 origin-center transition-transform duration-300 ease-out"></div>
-                    </div>
+                        <label class="relative block cursor-pointer group">
+                            <input 
+                                type="radio" 
+                                name="selecciones.{{ $candidato['categoria_id'] }}" 
+                                value="{{ $id }}" 
+                                wire:model="selecciones.{{ $candidato['categoria_id'] }}"
+                                class="sr-only peer"
+                            >
 
-                    <div class="relative z-10 w-full bg-white rounded-xl p-4 text-center flex flex-col items-center justify-between shadow transition group-hover:shadow-lg min-h-[260px] border-2 peer-checked:border-green-600 group-hover:border-green-600 overflow-hidden">
-                        @if ($candidato['foto'])
-                            <img src="{{ asset('storage/' . $candidato['foto']) }}" alt="Foto"
-                                class="w-32 h-32 rounded-full object-cover mb-4 shadow">
-                        @else
-                            <div class="w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-gray-700 text-center px-2 border border-dashed border-gray-400">
-                                <span class="text-sm leading-tight">Voto en blanco</span>
+                            {{-- X sobre la tarjeta cuando está seleccionada --}}
+                            <div class="absolute inset-0 z-20 opacity-0 scale-90 peer-checked:opacity-100 peer-checked:scale-100 transition-all duration-300 ease-out pointer-events-none overflow-hidden rounded-xl">
+                                <div class="absolute inset-0 bg-gray-700/40 rounded-xl"></div>
+                                <div class="absolute top-1/2 left-[10%] w-[80%] h-1 bg-white transform -rotate-45 origin-center transition-transform duration-300 ease-out"></div>
+                                <div class="absolute top-1/2 left-[10%] w-[80%] h-1 bg-white transform rotate-45 origin-center transition-transform duration-300 ease-out"></div>
                             </div>
-                        @endif
 
-                        <h2 class="text-lg font-semibold text-gray-800">
-                            {{ $candidato['nombres'] ?? 'Voto' }} {{ $candidato['apellidos'] ?? 'en blanco' }}
-                        </h2>
-                        <p class="text-sm text-gray-600">
-                            {{ $candidato['categoria']['nombre'] ?? '' }}
-                        </p>
-                    </div>
-                </label>
-            @endforeach
-        </div>
+                            {{-- Tarjeta del candidato --}}
+                            <div class="relative z-10 w-full bg-white rounded-xl text-center flex flex-col items-center shadow transition group-hover:shadow-lg border-2 peer-checked:border-green-600 group-hover:border-green-600 overflow-hidden">
+    
+                                {{-- Imagen o voto en blanco --}}
+                                @if ($candidato['foto'])
+                                    <div class="w-full p-1">
+                                        <img src="{{ asset('storage/' . $candidato['foto']) }}" alt="Foto"
+                                            class="w-full h-52 object-cover rounded-xl">
+                                    </div>
+                                @else
+                                    <div class="w-full p-1">
+                                        <div class="w-full h-52 flex items-center justify-center bg-gray-100 text-gray-600 text-lg font-semibold rounded-xl">
+                                            Voto en blanco
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- Nombre del candidato con fondo extendido al final --}}
+                                <div class="w-full bg-green-100 px-4 py-2 mt-auto">
+                                    <h2 class="text-base font-bold text-gray-800 leading-tight break-words">
+                                        {{ $candidato['nombres'] ?? 'Voto' }} {{ $candidato['apellidos'] ?? 'en blanco' }}
+                                    </h2>
+                                </div>
+                            </div>
+
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
 
         {{-- Botón de votar --}}
         <div class="mt-8 flex flex-col items-center space-y-2">
             <button 
                 type="submit"
                 class="relative flex items-center justify-center text-white font-semibold px-8 py-3 rounded-lg transition shadow-md"
-                :class="(seleccionado && !enviando) ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'"
-                :disabled="!seleccionado || enviando"
+                :class="completas && !enviando 
+                    ? 'bg-green-600 hover:bg-green-700' 
+                    : 'bg-gray-400 cursor-not-allowed'"
+                :disabled="!completas || enviando"
             >
                 {{-- Spinner --}}
                 <svg 
@@ -95,7 +133,7 @@
                 </svg>
 
                 {{-- Texto --}}
-                <span x-show="!enviando" x-text="seleccionado ? 'Votar' : 'Seleccione su candidato de preferencia'"></span>
+                <span x-show="!enviando">Votar</span>
                 <span x-show="enviando">Enviando...</span>
             </button>
         </div>

@@ -37,11 +37,15 @@ class AppPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->topbar(false)
-            ->brandLogo(
-                $config && $config->logo && file_exists(storage_path('app/public/' . $config->logo))
-                    ? asset('storage/' . $config->logo)
-                    : asset('storage/logos/logo.png')
-            )
+            ->brandLogo(function () use ($config) {
+                $path = storage_path('app/public/' . ($config->logo ?? ''));
+                if ($config && $config->logo && file_exists($path)) {
+                    return asset('storage/' . $config->logo);
+                }
+
+                // Si no hay logo, renderiza el SVG inline
+                return view('filament.logo-default');
+            })
             ->brandLogoHeight('4rem')
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')

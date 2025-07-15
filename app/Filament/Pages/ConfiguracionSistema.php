@@ -53,8 +53,7 @@ class ConfiguracionSistema extends Page implements HasForms
                             ->avatar()
                             ->imageEditor()
                             ->imagePreviewHeight('150')
-                            ->columnSpan(1)
-                            ->required(),
+                            ->columnSpan(1),
 
                         Forms\Components\Grid::make()
                             ->columns(1)
@@ -63,11 +62,11 @@ class ConfiguracionSistema extends Page implements HasForms
                                 Forms\Components\TextInput::make('nombre_institucion')
                                     ->label('Nombre de la institución')
                                     ->required()
-                                    ->maxLength(100),
+                                    ->maxLength(50),
 
                                 Forms\Components\TextInput::make('descripcion_votaciones')
                                     ->label('Descripción de las votaciones')
-                                    ->maxLength(100)
+                                    ->maxLength(50)
                                     ->nullable(),
                             ]),
                     ]),
