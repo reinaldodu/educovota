@@ -27,6 +27,7 @@ class AppPanelProvider extends PanelProvider
         $config = Configuracion::first();
         
         return $panel
+            ->favicon(asset('images/favicon.png'))
             ->darkMode(false)
             ->navigation(false)
             ->id('app')

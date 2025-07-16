@@ -54,7 +54,7 @@
     >
         {{-- Categorías con descripción --}}
         @foreach ($candidatos as $bloque)
-            <div class="mb-8 p-4 rounded-xl border border-gray-200 shadow-sm bg-gray-50">
+            <div class="mb-8 p-4 rounded-xl border border-gray-200 shadow-sm bg-white">
                 <h2 class="text-xl font-bold text-green-700 mb-4 text-center">
                     {{ $bloque['descripcion'] }}
                 </h2>

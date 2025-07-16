@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
         $config = Configuracion::first();
         
         return $panel
+            ->favicon(asset('images/favicon.png'))
             ->default()
             ->id('admin')
             ->path('admin')

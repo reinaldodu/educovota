@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->boolean('votacion_activa')->default(false);
             $table->boolean('requerir_password')->default(false);
+            // color de fondo del tarjetón
+            $table->string('color_fondo_tarjeton')->default('#ffffff');
             $table->timestamps();
         });
     }

@@ -22,7 +22,7 @@ class EstudianteResource extends Resource
 {
     protected static ?string $model = Estudiante::class;
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    
+
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -38,7 +38,7 @@ class EstudianteResource extends Resource
                 ->required()->preload()->searchable(),
         ]);
     }
-    
+
     public static function table(Table $table): Table
     {
         return $table
@@ -55,7 +55,7 @@ class EstudianteResource extends Resource
                     ->trueIcon('heroicon-o-check-circle')
                     ->trueColor('success')
                     ->tooltip(function ($record) {
-                        $voto = \App\Models\Voto::where('estudiante_id', $record->id)->latest()->first();
+                        $voto = Voto::where('estudiante_id', $record->id)->latest()->first();
                         return $voto
                             ? 'Votó el ' . $voto->created_at->format('d/m/Y \a \l\a\s h:i A')
                             : null;
@@ -89,6 +89,7 @@ class EstudianteResource extends Resource
                     ->label('Importar CSV')->color('gray')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->form([
+                        \Filament\Forms\Components\View::make('filament.descargar-plantilla'),
                         FileUpload::make('archivo')
                             ->label('Subir archivo CSV')
                             ->disk('local')->directory('importaciones')
@@ -96,12 +97,12 @@ class EstudianteResource extends Resource
                             ->rules(['mimes:csv'])
                             ->required(),
                     ])
-                    ->modalWidth('md')->modalHeading('Importar estudiantes desde archivo')
+                    ->modalWidth('md')->modalHeading('Importación masiva de estudiantes')
                     ->action(function (array $data) {
                         $disk = 'local';
                         $ruta = Storage::disk($disk)->path($data['archivo']);
                         $resultado = (new ImportarEstudiantes())->ejecutar($ruta);
-                        
+
                         if ($resultado['errores']->isNotEmpty()) {
                             $err = $resultado['errores']->first();
                             Notification::make()->title('Error en la importación')
@@ -113,17 +114,17 @@ class EstudianteResource extends Resource
                                 ->body("Se importaron {$resultado['importados']} registros correctamente.")
                                 ->send();
                         }
-                        
+
                         Storage::disk($disk)->delete($data['archivo']);
                     }),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [];
     }
-    
+
     public static function getPages(): array
     {
         return [
