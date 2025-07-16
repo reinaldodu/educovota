@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('apellidos');
             $table->string('foto')->nullable();
             $table->foreignId('categoria_id')->constrained('categorias')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('orden');
             $table->timestamps();
         });
     }

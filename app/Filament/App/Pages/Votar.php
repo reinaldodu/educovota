@@ -14,7 +14,7 @@ class Votar extends Page
 {
     protected static string $view = 'filament.app.pages.votar';
 
-    public $candidatos = []; // [nombre_categoria => [candidatos]]
+    public $candidatos = []; // Array de bloques con descripción y candidatos
     public $selecciones = []; // [categoria_id => candidato_id o 'blanco_{id}']
     public $config;
     public $user;
@@ -24,16 +24,17 @@ class Votar extends Page
         $this->user = Auth::guard('students')->user();
         $this->config = Configuracion::first();
 
-        // Obtener todas las categorías con sus candidatos sin ordenar
-        $categorias = Categoria::with(['candidatos'])->get();
+        // Obtener categorías ordenadas por 'orden' con sus candidatos
+        $categorias = Categoria::with(['candidatos' => function ($q) {
+            $q->orderBy('orden');
+        }])->orderBy('orden')->get();
 
-        // Agrupar candidatos por nombre de la categoría
         foreach ($categorias as $categoria) {
             $candidatos = $categoria->candidatos->map(function ($candidato) {
                 return $candidato->toArray();
-            })->all();
+            })->values()->all();
 
-            // Agregar manualmente opción de voto en blanco
+            // Agregar opción de voto en blanco
             $candidatos[] = [
                 'id' => 'blanco_' . $categoria->id,
                 'nombres' => 'Voto en blanco',
@@ -43,7 +44,10 @@ class Votar extends Page
                 'categoria' => ['nombre' => $categoria->nombre],
             ];
 
-            $this->candidatos[$categoria->nombre] = $candidatos;
+            $this->candidatos[] = [
+                'descripcion' => $categoria->descripcion ?: $categoria->nombre,
+                'candidatos' => $candidatos,
+            ];
         }
     }
 
@@ -51,7 +55,6 @@ class Votar extends Page
     {
         $estudianteId = auth()->id();
 
-        // Verificar si ya votó
         if (Voto::where('estudiante_id', $estudianteId)->exists()) {
             Notification::make()
                 ->title('Ya has votado')
@@ -61,7 +64,6 @@ class Votar extends Page
             return;
         }
 
-        // Guardar los votos por categoría
         foreach ($this->selecciones as $categoriaId => $valor) {
             $candidatoId = str_starts_with($valor, 'blanco_') ? null : $valor;
 
@@ -72,12 +74,10 @@ class Votar extends Page
             ]);
         }
 
-        // Cerrar sesión del estudiante
         Auth::guard('students')->logout();
         session()->invalidate();
         session()->regenerateToken();
 
-        // Notificar éxito
         Notification::make()
             ->title('¡Votación registrada con éxito!')
             ->info()

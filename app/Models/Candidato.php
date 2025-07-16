@@ -27,6 +27,14 @@ class Candidato extends Model
     //Eliminar la foto del candidato al eliminar el registro
     protected static function booted()
     {
+        // Al crear un candidato, asignar el orden automáticamente
+        static::creating(function ($candidato) {
+            // Si ya hay candidatos, el siguiente orden será el mayor + 1
+            $maxOrden = static::max('orden') ?? 0;
+            $candidato->orden = $maxOrden + 1;
+        });
+
+        // Eliminar foto del candidato al eliminar el registro
         static::deleting(function ($candidato) {
             if ($candidato->foto && Storage::disk('public')->exists($candidato->foto)) {
                 Storage::disk('public')->delete($candidato->foto);

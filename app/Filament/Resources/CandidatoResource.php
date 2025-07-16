@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CandidatoResource\Pages;
-use App\Filament\Resources\CandidatoResource\RelationManagers;
 use App\Models\Candidato;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CandidatoResource extends Resource
 {
@@ -23,7 +21,6 @@ class CandidatoResource extends Resource
     {
         return $form
             ->schema([
-                //agregar imagen
                 Forms\Components\FileUpload::make('foto')
                     ->label('Foto')
                     ->image()
@@ -33,52 +30,94 @@ class CandidatoResource extends Resource
                     ->disk('public')
                     ->directory('candidatos')
                     ->required(),
+
                 Forms\Components\Select::make('categoria_id')
                     ->relationship('categoria', 'nombre')
                     ->searchable()
                     ->required()
                     ->preload(),
+
                 Forms\Components\TextInput::make('nombres')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('apellidos')
                     ->required()
-                    ->maxLength(255),                
+                    ->maxLength(255),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
-                Tables\Columns\TextColumn::make('nombres')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('apellidos')
-                    ->searchable(),
-                //mostrar imagen como avatar
+                Tables\Columns\TextColumn::make('nombres')->searchable(),
+
+                Tables\Columns\TextColumn::make('apellidos')->searchable(),
+
                 Tables\Columns\ImageColumn::make('foto')
                     ->label('Foto')
                     ->disk('public')
                     ->size(50)
                     ->circular(),
+
                 Tables\Columns\TextColumn::make('categoria.nombre')
-                    ->label('Categoria')
+                    ->label('Categoría')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('subir')
+                        ->label('⬆ Subir')
+                        ->action(function ($record) {
+                            $anterior = Candidato::where('orden', '<', $record->orden)
+                                ->orderBy('orden', 'desc')
+                                ->first();
+
+                            if ($anterior) {
+                                [$record->orden, $anterior->orden] = [$anterior->orden, $record->orden];
+                                $record->save();
+                                $anterior->save();
+                            }
+                        })
+                        ->visible(function ($record) {
+                            $minOrden = Candidato::min('orden');
+                            return $record->orden > $minOrden;
+                        }),
+
+                    Tables\Actions\Action::make('bajar')
+                        ->label('⬇ Bajar')
+                        ->action(function ($record) {
+                            $siguiente = Candidato::where('orden', '>', $record->orden)
+                                ->orderBy('orden', 'asc')
+                                ->first();
+
+                            if ($siguiente) {
+                                [$record->orden, $siguiente->orden] = [$siguiente->orden, $record->orden];
+                                $record->save();
+                                $siguiente->save();
+                            }
+                        })
+                        ->visible(function ($record) {
+                            $maxOrden = Candidato::max('orden');
+                            return $record->orden < $maxOrden;
+                        }),
+                ])->label('Ordenar'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -87,11 +126,17 @@ class CandidatoResource extends Resource
             ]);
     }
 
+    /**
+     * Ordenar por defecto según el campo `orden`
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->orderBy('orden');
+    }
+
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

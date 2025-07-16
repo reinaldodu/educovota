@@ -35,6 +35,7 @@ class GradoResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
                 //mostrar el id del grado
                 Tables\Columns\TextColumn::make('id')
@@ -43,14 +44,14 @@ class GradoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('descripcion')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

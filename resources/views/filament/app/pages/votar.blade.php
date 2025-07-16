@@ -52,13 +52,15 @@
         }"
         @submit="enviando = true"
     >
-        {{-- Recorremos las categorías --}}
-        @foreach ($candidatos as $categoria => $lista)
-            <div class="mb-10">
-                <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-1">{{ $categoria }}</h2>
+        {{-- Categorías con descripción --}}
+        @foreach ($candidatos as $bloque)
+            <div class="mb-8 p-4 rounded-xl border border-gray-200 shadow-sm bg-gray-50">
+                <h2 class="text-xl font-bold text-green-700 mb-4 text-center">
+                    {{ $bloque['descripcion'] }}
+                </h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
-                    @foreach ($lista as $candidato)
+                    @foreach ($bloque['candidatos'] as $candidato)
                         @php 
                             $id = $candidato['id'] ?? 'blanco_' . $candidato['categoria_id']; 
                         @endphp
@@ -72,17 +74,13 @@
                                 class="sr-only peer"
                             >
 
-                            {{-- X sobre la tarjeta cuando está seleccionada --}}
                             <div class="absolute inset-0 z-20 opacity-0 scale-90 peer-checked:opacity-100 peer-checked:scale-100 transition-all duration-300 ease-out pointer-events-none overflow-hidden rounded-xl">
                                 <div class="absolute inset-0 bg-gray-700/40 rounded-xl"></div>
                                 <div class="absolute top-1/2 left-[10%] w-[80%] h-1 bg-white transform -rotate-45 origin-center transition-transform duration-300 ease-out"></div>
                                 <div class="absolute top-1/2 left-[10%] w-[80%] h-1 bg-white transform rotate-45 origin-center transition-transform duration-300 ease-out"></div>
                             </div>
 
-                            {{-- Tarjeta del candidato --}}
                             <div class="relative z-10 w-full bg-white rounded-xl text-center flex flex-col items-center shadow transition group-hover:shadow-lg border-2 peer-checked:border-green-600 group-hover:border-green-600 overflow-hidden">
-    
-                                {{-- Imagen o voto en blanco --}}
                                 @if ($candidato['foto'])
                                     <div class="w-full p-1">
                                         <img src="{{ asset('storage/' . $candidato['foto']) }}" alt="Foto"
@@ -96,14 +94,12 @@
                                     </div>
                                 @endif
 
-                                {{-- Nombre del candidato con fondo extendido al final --}}
                                 <div class="w-full bg-green-100 px-4 py-2 mt-auto">
                                     <h2 class="text-base font-bold text-gray-800 leading-tight break-words">
                                         {{ $candidato['nombres'] ?? 'Voto' }} {{ $candidato['apellidos'] ?? 'en blanco' }}
                                     </h2>
                                 </div>
                             </div>
-
                         </label>
                     @endforeach
                 </div>
@@ -120,7 +116,6 @@
                     : 'bg-gray-400 cursor-not-allowed'"
                 :disabled="!completas || enviando"
             >
-                {{-- Spinner --}}
                 <svg 
                     x-show="enviando"
                     class="w-5 h-5 animate-spin mr-2" 
@@ -132,7 +127,6 @@
                         d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8h4z" />
                 </svg>
 
-                {{-- Texto --}}
                 <span x-show="!enviando">Votar</span>
                 <span x-show="enviando">Enviando...</span>
             </button>

@@ -50,10 +50,17 @@ class Dashboard extends BaseDashboard
     }
 
     /**
-     * Acción de filtro (usa FilterAction con Select)
+     * Acción de filtro (usa FilterAction con Select),
+     * solo visible si hay más de una categoría.
      */
     protected function getHeaderActions(): array
     {
+        $totalCategorias = Categoria::count();
+
+        if ($totalCategorias <= 1) {
+            return [];
+        }
+
         return [
             FilterAction::make()
                 ->label('Filtrar por categoría')

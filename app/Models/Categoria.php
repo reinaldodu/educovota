@@ -15,4 +15,12 @@ class Categoria extends Model
     {
         return $this->hasMany(Candidato::class);
     }
+
+    protected static function booted(): void
+    {
+        // Al crear una nueva categoría, asignar el orden automáticamente
+        static::creating(function ($categoria) {
+            $categoria->orden = static::max('orden') + 1;
+        });
+    }
 }
