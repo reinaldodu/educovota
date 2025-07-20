@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
         
         // Ejecutar el seeder de configuración
         $this->call(ConfiguracionSeeder::class);
+        
+        // Ejecutar el seeder de grados
+        $this->call(GradoSeeder::class);
 
         User::factory()->create([
             'name' => 'Administrador del Sistema',
