@@ -19,12 +19,16 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use APP\Filament\App\Pages\LoginEstudiante;
 use App\Filament\App\Pages\Votar;
 use App\Models\Configuracion;
+use Illuminate\Support\Facades\Schema;
 
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $config = Configuracion::first();
+        $config = null;
+		if (Schema::hasTable('configuraciones')) {
+			$config = Configuracion::first();
+		}
         
         return $panel
             ->favicon(asset('images/favicon.png'))

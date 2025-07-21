@@ -18,13 +18,17 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use App\Models\Configuracion;
+use Illuminate\Support\Facades\Schema;
 
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $config = Configuracion::first();
+        $config = null;
+		if (Schema::hasTable('configuraciones')) {
+			$config = Configuracion::first();
+		}
         
         return $panel
             ->favicon(asset('images/favicon.png'))
