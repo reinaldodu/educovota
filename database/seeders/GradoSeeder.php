@@ -24,9 +24,11 @@ class GradoSeeder extends Seeder
         ];
 
         foreach ($grados as $id => $nombre) {
+            $nombreMin = strtolower($nombre);
             Grado::updateOrCreate([
                 'id' => $id,
                 'nombre' => $nombre,
+                'descripcion' => "Estudiantes de grado {$nombreMin}"
             ]);
         }
     }
