@@ -19,6 +19,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use App\Models\Configuracion;
 use Illuminate\Support\Facades\Schema;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
+use App\Filament\App\Pages\LoginAdmin;
 
 
 class AdminPanelProvider extends PanelProvider
@@ -35,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(LoginAdmin::class)
             ->authGuard('web')
             ->sidebarCollapsibleOnDesktop()
             ->profile()
@@ -48,6 +51,15 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 \App\Filament\Pages\Dashboard::class,
             ])
+           ->renderHook(
+                PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): string => Blade::render('
+                    <div class="px-4 py-2 text-sm text-gray-700">
+                        Hola, {{ auth()->user()->name }}
+                    </div>
+                ')
+            )
+
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->middleware([
                 EncryptCookies::class,
