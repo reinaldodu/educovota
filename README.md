@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://sites.google.com/site/educolibre/educovota-votaciones-escolares" target="_blank">
-    <img src="https://i.postimg.cc/tsksWrcw/Educo-Libre.png" alt="EducoVota Logo" width="120">
+    <img src="https://i.postimg.cc/DzVFrkqK/Educo-Libre.jpg" alt="EducoVota Logo" width="120">
   </a>
 </p>
 
