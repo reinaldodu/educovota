@@ -43,7 +43,7 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 2. Extrae el contenido del archivo en una carpeta local.
 3. Abre el archivo `laragon.exe` ubicado dentro de la carpeta extraída.
 4. Inicia los servicios necesarios haciendo clic en el botón **"Iniciar todo"** (esto activará Apache y MySQL).
-5. Abre tu navegador y accede a: [http://127.0.0.1/admin](http://127.0.0.1/admin)
+5. Abre tu navegador y accede a: [https://educovota.test/admin](https://educovota.test/admin)
 6. Inicia sesión con las siguientes credenciales de administrador:
 
    * **Correo:** `admin@email.co`
