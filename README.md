@@ -6,16 +6,17 @@
 
 <h1 align="center">EducoVota V.25.7</h1>
 <p align="center">
-  Sistema de votaciones estudiantiles — <a href="https://sites.google.com/site/educolibre/educovota-votaciones-escolares" target="_blank">Sitio oficial</a>
+  Sistema de Votaciones Estudiantiles — <a href="https://sites.google.com/site/educolibre/educovota-votaciones-escolares" target="_blank">Sitio oficial</a>
 </p>
 
 ---
 
 ## ¿Qué es EducoVota?
 
-**EducoVota V.25.7** es un sistema completo de votaciones escolares, diseñado para facilitar procesos democráticos al interior de instituciones educativas de manera rápida, segura y eficiente. Este software es de código abierto y puede ser configurado en menos de cinco minutos gracias a su versión portable.
+**EducoVota V.25.7** es un sistema completo de votaciones escolares, diseñado para facilitar procesos democráticos al interior de instituciones educativas de manera rápida, segura y eficiente. Este software es de código abierto y puede ser configurado en menos de cinco minutos (versión portable).
 
-> ⚙️ Desarrollado con Laravel y Filament, EducoVota garantiza una experiencia moderna, flexible y segura en aplicaciones web.
+🚀 **¡Descubre la nueva versión de EducoVota!** Ahora con una interfaz de usuario totalmente renovada, un moderno panel gráfico para visualizar resultados en tiempo real, diseño responsivo para acceder desde cualquier dispositivo, y mejoras significativas en seguridad. ¡Una experiencia más intuitiva, visual y confiable para tus jornadas electorales escolares!
+
 
 ---
 
@@ -27,29 +28,98 @@
 - 🔐 **Votación segura:** opción para proteger el acceso mediante contraseña.
 - 📋 **Control del proceso:** seguimiento de estudiantes que han votado y los que están pendientes.
 - 📥 **Carga masiva de votantes:** a través de archivos CSV.
-- 📚 **Bitácora detallada:** registra cada acción del proceso electoral.
 - 🚫 **Cierre seguro del sistema:** evita votos fuera del tiempo habilitado.
 - 👥 **Creación de administradores:** crea perfiles con privilegios de administrador para apoyar la logística.
 
 ---
 
-## Instalación rápida
+## Descargar versión portable
 
-1. Clona el repositorio.
-2. Copia `.env.example` como `.env` y configura la base de datos.
-3. Ejecuta `composer install` para instalar las dependencias.
-4. Ejecuta las migraciones con `php artisan migrate`.
-5. Lanza el servidor con `php artisan serve`.
+Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesidad de instalaciones previas ni configuraciones complejas. Es ideal para poner en marcha el sistema rápidamente, incluso sin conocimientos técnicos o sin contar con un servidor web propio.
+
+### Pasos para ejecutarla:
+
+1. Descarga el archivo `.zip` de la última versión desde la sección **Releases** de este repositorio.
+2. Extrae el contenido del archivo en una carpeta local.
+3. Abre el archivo `laragon.exe` ubicado dentro de la carpeta extraída.
+4. Inicia los servicios necesarios haciendo clic en el botón **"Iniciar todo"** (esto activará Apache y MySQL).
+5. Abre tu navegador y accede a: [http://127.0.0.1/admin](http://127.0.0.1/admin)
+6. Inicia sesión con las siguientes credenciales de administrador:
+
+   * **Correo:** `admin@email.co`
+   * **Contraseña:** `admin`
+
+🔹 <em>Esta versión utiliza <a href="https://laragon.org" target="_blank">Laragon 6.0</a> como entorno web portátil.</em>
+
 
 ---
 
-## Acerca del EducoVota
+## Instalación versión estándar
+
+Esta opción está pensada para entornos de producción o para quienes deseen tener un mayor control sobre la configuración y despliegue del sistema en un servidor web propio.
+
+### Requisitos previos:
+
+* PHP 8.2 o superior
+ * Tener instalada y habilitadas las extensiones php ext-intl y ext-zip
+* Composer
+* Node.js y npm
+* MySQL 8.0 o cualquier base de datos compatible con Laravel
+
+### Pasos de instalación:
+
+1. Clona el repositorio en tu entorno local o servidor:
+
+   ```bash
+   git clone https://github.com/reinaldodu/educovota.git
+   ```
+2. Copia el archivo de entorno:
+
+   ```bash
+   cp .env.example .env
+   ```
+3. Configura las variables del archivo `.env`, en especial los datos de conexión a la base de datos.
+4. Instala las dependencias PHP con Composer:
+
+   ```bash
+   composer install
+   ```
+5. Instala las dependencias de JavaScript:
+
+   ```bash
+   npm install
+   ```
+6. Compila los assets para producción:
+
+   ```bash
+   npm run build
+   ```
+7. Genera la llave de la aplicación:
+
+   ```bash
+   php artisan key:generate
+   ```
+8. Ejecuta las migraciones y carga los datos base:
+
+   ```bash
+   php artisan migrate --seed
+   ```
+9. Inicia el servidor local (opcional si ya tienes un entorno de servidor configurado):
+
+   ```bash
+   php artisan serve --port=80
+   ```
+
+Una vez en marcha, puedes acceder al sistema desde [http://localhost/admin](http://localhost/admin).
+
+---
+
+## Acerca de EducoVota
 
 **EducoVota** es software libre desarrollado bajo el proyecto [Educolibre](https://sites.google.com/site/educolibre/), con el objetivo de empoderar a las comunidades educativas mediante herramientas tecnológicas accesibles, seguras y adaptables.
 
 Este sistema está especialmente pensado para fines educativos y se alienta su uso bajo principios de colaboración y mejora continua.  
 
-Para más información, consulta el sitio web del proyecto o revisa el archivo `LICENSE` incluido en este repositorio.
 
 ---
 
@@ -57,19 +127,15 @@ Para más información, consulta el sitio web del proyecto o revisa el archivo `
 
 Este sistema ha sido desarrollado usando:
 
-### Laravel
-
 <p align="center">
   <a href="https://laravel.com" target="_blank">
     <img src="https://i.postimg.cc/bJqbrn54/Laravel.png" width="320" alt="Laravel Logo">
   </a>
 </p>
 
-Laravel es un framework PHP moderno que ofrece herramientas elegantes para construir aplicaciones web robustas, seguras y escalables.
+**Laravel V.12** es un framework PHP moderno que ofrece herramientas elegantes para construir aplicaciones web robustas, seguras y escalables.
 
 ---
-
-### Filament 3
 
 <p align="center">
   <a href="https://filamentphp.com" target="_blank">
@@ -88,6 +154,6 @@ Laravel es un framework PHP moderno que ofrece herramientas elegantes para const
 Esto significa que puedes usar, modificar y redistribuir el software libremente, siempre que mantengas la misma licencia y respetes las condiciones de uso.  
 Este proyecto promueve el **uso educativo, la colaboración abierta y la mejora continua**.
 
-Consulta el archivo `LICENSE` incluido en este repositorio para más información.
+Para más información, consulta el sitio web del proyecto o revisa el archivo `LICENSE` incluido en este repositorio.
 
 ---
