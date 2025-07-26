@@ -3,12 +3,17 @@
 
     {{-- Mensaje de bienvenida --}}
     @if (!empty($user))
-        <div class="absolute top-4 right-4 text-xs text-gray-700 bg-green-100/60 rounded-md px-2 py-1 shadow-sm">
+        <div 
+            class="sm:absolute sm:top-4 sm:right-4 sm:text-left sm:mb-0
+                flex justify-center items-center text-center mb-9
+                text-xs text-gray-700 bg-green-100/60 rounded-md px-2 py-1 shadow-sm"
+        >
             Gracias por participar, 
-            <span class="font-semibold text-gray-800">{{ $user->nombres }} {{ $user->apellidos }}</span> 
-            <span class="text-gray-500">({{ $user->documento }})</span>
+            <span class="font-semibold text-gray-800 ml-1">{{ $user->nombres }} {{ $user->apellidos }}</span> 
+            <span class="text-gray-500 ml-1">({{ $user->documento }})</span>
         </div>
     @endif
+
 
     {{-- Encabezado institucional --}}
     <div class="flex flex-col sm:flex-row items-center justify-center mb-10 gap-6">

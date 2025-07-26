@@ -43,11 +43,13 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 2. Extrae el contenido del archivo en una carpeta local.
 3. Abre el archivo `laragon.exe` ubicado dentro de la carpeta extraída.
 4. Inicia los servicios necesarios haciendo clic en el botón **"Iniciar todo"** (esto activará Apache y MySQL).
-5. Abre tu navegador y accede a: [https://educovota.test/admin](https://educovota.test/admin)
+5. Abre tu navegador y accede a: [https://educovota.test/admin](https://educovota.test/admin) para configurar el sistema de votaciones.
 6. Inicia sesión con las siguientes credenciales de administrador:
 
    * **Correo:** `admin@email.co`
    * **Contraseña:** `admin`
+
+7. Para votar ingrese a: [https://educovota.test](https://educovota.test)
 
 🔹 <em>Esta versión utiliza <a href="https://laragon.org" target="_blank">Laragon 6.0</a> como entorno web portátil.</em>
 
@@ -115,7 +117,12 @@ Esta opción está pensada para entornos de producción o para quienes deseen te
    php artisan serve --port=80
    ```
 
-Una vez en marcha, puedes acceder al sistema desde [http://localhost/admin](http://localhost/admin).
+Una vez en marcha, puedes administrar el sistema desde [http://127.0.0.1/admin](http://127.0.0.1/admin) o reemplazando 127.0.0.1 por el dominio en caso de haberlo configurado.
+
+Para acceder al tarjetón de votaciones lo puede hacer a través de la ip del servidor o el nombre del dominio.
+
+🔹  Se recomienda revisar la documentación de filament para la [optimización para producción](https://filamentphp.com/docs/3.x/panels/installation#optimizing-filament-for-production).
+🔹  También es importante revisar las opciones de [despliegue para producción](https://filamentphp.com/docs/3.x/panels/installation#deploying-to-production).
 
 ---
 
@@ -123,7 +130,7 @@ Una vez en marcha, puedes acceder al sistema desde [http://localhost/admin](http
 
 **EducoVota** es software libre desarrollado bajo el proyecto [Educolibre](https://sites.google.com/site/educolibre/), con el objetivo de empoderar a las comunidades educativas mediante herramientas tecnológicas accesibles, seguras y adaptables.
 
-Este sistema está especialmente pensado para fines educativos y se alienta su uso bajo principios de colaboración y mejora continua.  
+Este sistema está especialmente pensado para fines educativos y se alienta su uso bajo principios de colaboración y mejora continua. 
 
 
 ---
