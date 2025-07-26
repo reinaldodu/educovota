@@ -135,6 +135,28 @@ Este sistema está especialmente pensado para fines educativos y se alienta su u
 
 ---
 
+## Capturas de pantalla
+
+A continuación, se presentan algunas capturas que muestran la interfaz renovada de EducoVota V.25.7:
+
+### 🎯 Panel de resultados
+![Panel gráfico 1](https://i.postimg.cc/FHKkZsHL/panel1.png)
+![Panel gráfico 2](https://i.postimg.cc/L80Y0KJ0/panel2.png)
+
+### 🗳️ Tarjetón de votación
+![Tarjetón](https://i.postimg.cc/k56V018M/tarjeton.png)
+
+### 👨‍🏫 Gestión de candidatos
+![Candidatos](https://i.postimg.cc/J7bX72FG/candidatos.png)
+
+### ⚙️ Configuración general del sistema
+![Configuración](https://i.postimg.cc/RVdnKn4m/configuracion.png)
+
+### 🧑‍ Lista de estudiantes
+![Estudiantes](https://i.postimg.cc/gkmZxK94/estudiantes.png)
+
+---
+
 ## Tecnología base
 
 Este sistema ha sido desarrollado usando:
