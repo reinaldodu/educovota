@@ -104,7 +104,12 @@ Esta opción está pensada para entornos de producción o para quienes deseen te
    ```bash
    php artisan migrate --seed
    ```
-9. Inicia el servidor local (opcional si ya tienes un entorno de servidor configurado):
+9. Crear enlace simbólico para los archivos públicos:
+
+   ```bash
+   php artisan storage:link
+   ```
+10. Inicia el servidor local (opcional si ya tienes un entorno de servidor configurado):
 
    ```bash
    php artisan serve --port=80
