@@ -42,14 +42,13 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 1. Descarga el archivo `.zip` de la última versión desde la sección **Releases** de este repositorio.
 2. Extrae el contenido del archivo en una carpeta local.
 3. Abre el archivo `laragon.exe` ubicado dentro de la carpeta extraída.
-4. Inicia los servicios necesarios ejecutando el archivo inicia.bat (no cerrar esta terminal, para tener activo el sistema).
-5. Abre tu navegador y accede a: [http://127.0.0.1/admin](http://127.0.0.1/admin) para configurar el sistema de votaciones.
-6. Inicia sesión con las siguientes credenciales de administrador:
+4. Espere unos segundos mientras el sistema abre automáticamente el navegador web con la página de administración de EducoVota (http://127.0.0.1/admin).
+5. Inicia sesión con las siguientes credenciales de administrador:
 
    * **Correo:** `admin@email.co`
    * **Contraseña:** `admin`
 
-7. Para votar ingrese a: [http://127.0.0.1](http://127.0.0.1) o también desde otra máquina utilizando la dirección ip del servidor.
+7. Para votar ingrese a: [http://127.0.0.1](http://127.0.0.1) o también desde otra máquina utilizando la dirección ip del servidor (donde tiene instalado EducoVota portable).
 
 🔹 <em>Esta versión utiliza <a href="https://laragon.org" target="_blank">Laragon 6.0</a> como entorno web portátil.</em>
 
