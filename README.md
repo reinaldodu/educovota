@@ -39,10 +39,10 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 
 ### Pasos para ejecutarla:
 
-1. Descarga el archivo `.zip` de la última versión desde la sección **Releases** de este repositorio.
+1. Descarga el archivo comprimido `.7z` de la última versión desde la sección **Releases** de este repositorio (para descomprimir el archivo utilice [7-Zip](https://www.7-zip.org/)).
 2. Extrae el contenido del archivo en una carpeta local.
 3. Abre el archivo `laragon.exe` ubicado dentro de la carpeta extraída.
-4. Espere unos segundos mientras el sistema abre automáticamente el navegador web con la página de administración de EducoVota (http://127.0.0.1/admin).
+4. Espere unos segundos mientras el sistema abre automáticamente el navegador web con la página de administración de EducoVota (http://127.0.0.1/admin).  En caso de que muestre error de conexión, espere unos segundos más y vuelva a intentar.
 5. Inicia sesión con las siguientes credenciales de administrador:
 
    * **Correo:** `admin@email.co`
