@@ -42,7 +42,7 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 1. Descarga el archivo comprimido `.7z` de la última versión desde la sección **Releases** de este repositorio (para descomprimir el archivo utilice [7-Zip](https://www.7-zip.org/)).
 2. Extrae el contenido del archivo en una carpeta local.
 3. Dentro de la carpeta extraída, haz doble clic en el archivo `EducoVota.bat` para iniciar el sistema.
-4. Espera unos segundos mientras el sistema inicia. El navegador web se abrirá automáticamente con la página de administración de EducoVota (http://127.0.0.1/admin).  En caso de que muestre error de conexión, espera unos segundos más y vuelve a recargar la página.
+4. Espera unos segundos mientras el sistema inicia. El navegador web se abrirá automáticamente en la página de administración de EducoVota (http://127.0.0.1/admin).
 5. Inicia sesión con las siguientes credenciales de administrador:
 
    * **Correo:** `admin@email.co`
