@@ -64,13 +64,13 @@
                     {{ $bloque['descripcion'] }}
                 </h2>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-center">
                     @foreach ($bloque['candidatos'] as $candidato)
                         @php 
                             $id = $candidato['id'] ?? 'blanco_' . $candidato['categoria_id']; 
                         @endphp
 
-                        <label class="relative block cursor-pointer group">
+                        <label class="relative block cursor-pointer group w-full max-w-[280px] mx-auto md:max-w-full">
                             <input 
                                 type="radio" 
                                 name="selecciones.{{ $candidato['categoria_id'] }}" 
@@ -88,12 +88,14 @@
                             <div class="relative z-10 w-full bg-white rounded-xl text-center flex flex-col items-center shadow transition group-hover:shadow-lg border-2 peer-checked:border-green-600 group-hover:border-green-600 overflow-hidden">
                                 @if ($candidato['foto'])
                                     <div class="w-full p-1">
-                                        <img src="{{ asset('storage/' . $candidato['foto']) }}" alt="Foto"
-                                            class="w-full h-52 object-cover rounded-xl">
+                                        <div class="aspect-[1/1] w-full overflow-hidden rounded-xl bg-gray-100">
+                                            <img src="{{ asset('storage/' . $candidato['foto']) }}" alt="Foto"
+                                                class="w-full h-full object-cover">
+                                        </div>
                                     </div>
                                 @else
                                     <div class="w-full p-1">
-                                        <div class="w-full h-52 flex items-center justify-center bg-gray-100 text-gray-600 text-lg font-semibold rounded-xl">
+                                        <div class="aspect-[1/1] w-full flex items-center justify-center bg-gray-100 text-gray-600 text-lg font-semibold rounded-xl">
                                             Voto en blanco
                                         </div>
                                     </div>
