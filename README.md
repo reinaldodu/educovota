@@ -50,9 +50,9 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 
 🔹 Se recomienda cambiar la contraseña al ingresar al sistema, desde la opción **Perfil** (menú del usuario, parte superior derecha de la pantalla).
 
-🔹 Para configurar el sistema es importante hacerlo desde la url `http://127.0.0.1/admin` para que las imágenes se carguen correctamente.
+6. Para votar ingrese a: [http://127.0.0.1](http://127.0.0.1) o también desde otra máquina utilizando la dirección ip del servidor (donde tiene instalado EducoVota portable).
 
-7. Para votar ingrese a: [http://127.0.0.1](http://127.0.0.1) o también desde otra máquina utilizando la dirección ip del servidor (donde tiene instalado EducoVota portable).
+🔹 Para configurar el sistema de EducoVota portable es importante hacerlo desde la url `http://127.0.0.1/admin` para que las imágenes se carguen correctamente.
 
 🔹 <em>Esta versión utiliza <a href="https://laragon.org" target="_blank">Laragon 6.0</a> como entorno web portátil.</em>
 
