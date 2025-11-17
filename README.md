@@ -41,14 +41,16 @@ Esta versión permite ejecutar EducoVota en tan solo **5 minutos**, sin necesida
 
 1. Descarga el archivo comprimido `.7z` de la última versión desde la sección **Releases** de este repositorio (para descomprimir el archivo utilice [7-Zip](https://www.7-zip.org/)).
 2. Extrae el contenido del archivo en una carpeta local.
-3. Abre el archivo `laragon.exe` ubicado dentro de la carpeta extraída.
-4. Espere unos segundos mientras el sistema abre automáticamente el navegador web con la página de administración de EducoVota (http://127.0.0.1/admin).  En caso de que muestre error de conexión, espere unos segundos más y vuelva a intentar.
+3. Dentro de la carpeta extraída, haz doble clic en el archivo `EducoVota.bat` para iniciar el sistema.  Si aparece una ventana de seguridad de Windows, selecciona la opción **Permitir acceso** para que el servidor MySQL funcione correctamente y PHP pueda ejecutarse.
+4. Espera unos segundos mientras el sistema inicia. El navegador web se abrirá automáticamente en la página de administración de EducoVota (http://127.0.0.1/admin).  La primera vez que inicies el sistema, se realizará la configuración inicial (esto puede tardar unos segundos adicionales dependiendo del rendimiento de tu equipo).
 5. Inicia sesión con las siguientes credenciales de administrador:
 
    * **Correo:** `admin@email.co`
    * **Contraseña:** `admin`
 
 🔹 Se recomienda cambiar la contraseña al ingresar al sistema, desde la opción **Perfil** (menú del usuario, parte superior derecha de la pantalla).
+
+🔹 Para configurar el sistema es importante hacerlo desde la url `http://127.0.0.1/admin` para que las imágenes se carguen correctamente.
 
 7. Para votar ingrese a: [http://127.0.0.1](http://127.0.0.1) o también desde otra máquina utilizando la dirección ip del servidor (donde tiene instalado EducoVota portable).
 
